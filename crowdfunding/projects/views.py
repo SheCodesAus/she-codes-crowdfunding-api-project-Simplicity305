@@ -3,10 +3,10 @@ from django.http import Http404
 # Create your views here.
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 
-from .models import Project
-from .serializers import ProjectSerializer
+from .models import Project, Pledge
+from .serializers import ProjectSerializer, PledgeSerializer
 
 class ProjectList(APIView):
     def get(self, request):
@@ -38,5 +38,12 @@ class ProjectDetail(APIView):
         return Response(serializer.data)
     #going to create an instance of a project serialiser and 
 
+    #hes looking for a list create view in api classydrf 
+    #THIS PART CONNECTS TO THE SERIALISER PLEDGE 
+    
+class PledgeList(generics.ListCreateAPIView):
+    queryset = Pledge.objects.all()
+    serializer_class = PledgeSerializer
+        
     
 
