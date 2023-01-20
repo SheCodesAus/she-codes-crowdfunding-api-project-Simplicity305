@@ -28,6 +28,19 @@ class ProjectSerializer(serializers.Serializer):
     def create(self, validated_data):
         return Project.objects.create(**validated_data) #validated data is a dictionary that represents the data from our serialiser. ** says take everything in here and return in key values pair eg title: name of title 
     
+    # METHOD FOR IMPLEMENTING PUT/UPDATE FUNCTIONALITY
+    def update(self, instance, validated_data):
+      	instance.title = validated_data.get('title', instance.title)
+      	instance.description = validated_data.get('description', instance.description)
+      	instance.goal = validated_data.get('goal', instance.goal)
+      	instance.image = validated_data.get('image', instance.image)
+      	instance.is_open = validated_data.get('is_open', instance.is_open)
+      	instance.date_created = validated_data.get('date_created', instance.date_created)
+      	instance.owner = validated_data.get('owner', instance.owner)
+      	instance.save()
+      	return instance
+    
+    
 # SPLITTING THE PROJECT SERIALIZER INTO TWO
 # Previously when it was just the Project serializer class, the pledges would appear under each project. By creating a new class and changing the project detail class in Views to refer to this serializer instead, we remove the pledges from showing on the projects page
 class ProjectDetailSerializer(ProjectSerializer):

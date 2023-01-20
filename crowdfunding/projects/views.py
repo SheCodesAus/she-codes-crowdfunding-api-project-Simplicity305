@@ -3,12 +3,14 @@ from django.http import Http404
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics
+from rest_framework import status, generics, permissions
 
 from .models import Project, Pledge
 from .serializers import ProjectSerializer, PledgeSerializer, ProjectDetailSerializer
+from .permissions import IsOwnerOrReadOnly
 
 class ProjectList(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] #This removes the boxes where you create a new project if you're logged out - remove this code and the box will return for - (tested).
     
     def get(self, request):
         projects = Project.objects.all() 
@@ -28,6 +30,10 @@ class ProjectList(APIView):
     
 class ProjectDetail(APIView):
     
+
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+        #TODO Triple check this - added the permission class because last step for permissions says to do this but last step specifies project detail but first step is project list - not detail. Copying the same code from project list over to project detail. Have also implemented isownerorreadonly at project list class.
+    
     def get_object(self, pk): 
         try: 
             return Project.objects.get(pk=pk) #means that pk is equal to the primary key that its been given - use pk because its not always id - could be username but has to match what we put in our url 
@@ -44,6 +50,22 @@ class ProjectDetail(APIView):
 
     #hes looking for a list create view in api classydrf 
     #THIS PART CONNECTS TO THE SERIALISER PLEDGE 
+    
+    # METHOD FOR POST
+    # When viewing a specific project, there'll now be a put option. It adds boxes where you can input info. Remove this code and the box will be removed and it will just show you the 'details' of the project -(tested).
+    def put(self, request, pk):
+        project = self.get_object(pk)
+        data = request.data
+        serializer = ProjectDetailSerializer(
+            instance=project,
+            data=data,
+            partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
 
     
 class PledgeList(generics.ListCreateAPIView):
