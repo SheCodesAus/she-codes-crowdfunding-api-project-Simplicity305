@@ -20,7 +20,7 @@ class ProjectList(APIView):
     def post(self, request): #request is going to be the request object that django receives. it receives a request object and its going to do stuff with it - we're getting the payload from the request gets sent. because of the way that the api view works, it will always give you request and if you dont handle it, it wont work.abs(x)
         serializer = ProjectSerializer(data=request.data)
         if serializer.is_valid(): #similar ish to form. someone in sydney used a walrus operator - recently introduced and usually only used in data science.
-            serializer.save()
+            serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED) 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
@@ -49,6 +49,9 @@ class ProjectDetail(APIView):
 class PledgeList(generics.ListCreateAPIView):
     queryset = Pledge.objects.all()
     serializer_class = PledgeSerializer
+    
+    def perform_create(self, serializer):
+        serializer.save(supporter=self.request.user)
         
     
 

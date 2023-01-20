@@ -7,6 +7,7 @@ class PledgeSerializer(serializers.ModelSerializer): #used model forms which int
     class Meta:
         model = Pledge
         fields = ['id', 'amount', 'comment', 'anonymous', 'project', 'supporter']
+        read_only_fields = ['id', 'supporter']
         #fields = '__all__' - could have also done it this way instead of listing them all out 
 
 
@@ -18,7 +19,8 @@ class ProjectSerializer(serializers.Serializer):
     image = serializers.URLField()
     is_open = serializers.BooleanField()
     date_created = serializers.DateTimeField()
-    # owner = serializers.CharField(max_length=200) #NOTE check this - appears in first setup slide, but not the models handling one
+    # owner = serializers.CharField(max_length=200) #NOTE was in setup - not in models setup - replaced by below in user setup
+    owner = serializers.ReadOnlyField(source='owner.id') #shows a new field - owner id - in the list of project info on the main projects page
     # pledges = PledgeSerializer(many=True, read_only=True) NOTE Per Thinkific slides, this line was struck through and the be
 
     
