@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get(
-    'DJANGO_SECRET_KEY', 
+    'DJANGO_SECRET_KEY',
     'django-insecure-6f5fiv53l$d=%d_0_8&znvd!6&d3rfy-qowzswx^u)i-p_dsm6'
     )
 
@@ -32,7 +32,7 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG') != 'False'
 
-ALLOWED_HOSTS = ['weathered-dawn-5261.fly.dev', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['crowdfund-shecodesperth-2023.fly.dev', '127.0.0.1', 'localhost']
 CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = ['https://*.fly.dev']
 
